@@ -8,7 +8,8 @@ import {
 } from "@/app/_constants/transactions";
 import { Transaction, TransactionType } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { CircleIcon, DeleteIcon, EditIcon } from "lucide-react";
+import { CircleIcon, DeleteIcon } from "lucide-react";
+import EditTransactionButton from "../_components/edit-transaction";
 
 export const Transactioncolumns: ColumnDef<Transaction>[] = [
   {
@@ -77,12 +78,10 @@ export const Transactioncolumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "actions",
     header: "Ações",
-    cell: () => {
+    cell: ({ row: { original: transaction } }) => {
       return (
         <div className="space-x-1">
-          <Button variant="ghost" size="icon">
-            <EditIcon />
-          </Button>
+          <EditTransactionButton transaction={transaction} />
           <Button variant="ghost" size="icon">
             <DeleteIcon />
           </Button>
