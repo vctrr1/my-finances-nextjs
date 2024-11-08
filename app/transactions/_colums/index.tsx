@@ -1,9 +1,14 @@
 "use client";
 
 import { Badge } from "@/app/_components/ui/badge";
+import { Button } from "@/app/_components/ui/button";
+import {
+  PAYMENT_METHOD_LABELS,
+  TRANSACTION_CATEGORY_LABELS,
+} from "@/app/_constants/transactions";
 import { Transaction, TransactionType } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { CircleIcon } from "lucide-react";
+import { CircleIcon, DeleteIcon, EditIcon } from "lucide-react";
 
 export const Transactioncolumns: ColumnDef<Transaction>[] = [
   {
@@ -41,21 +46,48 @@ export const Transactioncolumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "category",
     header: "Categoria",
+    cell: ({ row: { original: transaction } }) =>
+      TRANSACTION_CATEGORY_LABELS[transaction.category],
   },
   {
     accessorKey: "paymentMethod",
     header: "Método de Pagamento",
+    cell: ({ row: { original: transaction } }) =>
+      PAYMENT_METHOD_LABELS[transaction.paymentMethod],
   },
   {
     accessorKey: "date",
     header: "Data",
+    cell: ({ row: { original: transaction } }) =>
+      new Date(transaction.date).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }),
   },
   {
     accessorKey: "amount",
     header: "Valor",
+    cell: ({ row: { original: transaction } }) =>
+      new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(Number(transaction.amount)),
   },
   {
     accessorKey: "actions",
-    header: "",
+    header: "Ações",
+    cell: () => {
+      return (
+        <div className="space-x-1">
+          <Button variant="ghost" size="icon">
+            <EditIcon />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <DeleteIcon />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
