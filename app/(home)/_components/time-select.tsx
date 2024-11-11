@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Select,
   SelectContent,
@@ -5,25 +7,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/_components/ui/select";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const MONTH_OPTIONS = [
-  { value: "1", label: "January" },
-  { value: "2", label: "February" },
-  { value: "3", label: "March" },
-  { value: "4", label: "April" },
-  { value: "5", label: "May" },
-  { value: "6", label: "June" },
-  { value: "7", label: "July" },
-  { value: "8", label: "August" },
-  { value: "9", label: "September" },
-  { value: "10", label: "October" },
-  { value: "11", label: "November" },
-  { value: "12", label: "December" },
+  { value: "01", label: "Janeiro" },
+  { value: "02", label: "Fevereiro" },
+  { value: "03", label: "Março" },
+  { value: "04", label: "Abril" },
+  { value: "05", label: "Maio" },
+  { value: "06", label: "Junho" },
+  { value: "07", label: "Julho" },
+  { value: "08", label: "Agosto" },
+  { value: "09", label: "Setembro" },
+  { value: "10", label: "Outubro" },
+  { value: "11", label: "Novembro" },
+  { value: "12", label: "Dezembro" },
 ];
 
 const TimeSelect = () => {
+  const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const month = searchParams.get("month");
+
+  const handleMonthChange = (month: string) => {
+    push(`/?month=${month}`);
+  };
+
   return (
-    <Select>
+    <Select
+      onValueChange={(value) => handleMonthChange(value)}
+      defaultValue={month ?? ""}
+    >
       <SelectTrigger className="rounded-lg">
         <SelectValue placeholder="Selecione o mês" />
       </SelectTrigger>

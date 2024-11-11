@@ -9,24 +9,36 @@ import CardGrid from "./card-grid";
 import AddTransactionButton from "@/app/_components/add-transaction-button";
 import { db } from "@/app/_lib/prisma";
 
-const SummaryCards = async () => {
+interface SummaryCardsProps {
+  month: string;
+}
+
+const SummaryCards = async ({ month }: SummaryCardsProps) => {
+  // objeto que vai ser passado na query do db para perar as transações apenas no mes selecionado
+  const where = {
+    date: {
+      gte: new Date(`2024-${month}-01`),
+      lt: new Date(`2024-${month}-31`),
+    },
+  };
+
   const depositsTotal = (
     await db.transaction.aggregate({
-      where: { type: "DEPOSIT" },
+      where: { ...where, type: "DEPOSIT" },
       _sum: { amount: true },
     })
   )?._sum?.amount;
 
   const investmentTotal = (
     await db.transaction.aggregate({
-      where: { type: "INVESTMENT" },
+      where: { ...where, type: "INVESTMENT" },
       _sum: { amount: true },
     })
   )?._sum?.amount;
 
   const expensesTotal = (
     await db.transaction.aggregate({
-      where: { type: "EXPENSE" },
+      where: { ...where, type: "EXPENSE" },
       _sum: { amount: true },
     })
   )?._sum?.amount;

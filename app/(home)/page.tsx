@@ -4,12 +4,24 @@ import { redirect } from "next/navigation";
 import SummaryCard from "./_components/summary-cards";
 import TimeSelect from "./_components/time-select";
 import { Button } from "../_components/ui/button";
+import { isMatch } from "date-fns";
 
-export default async function Home() {
+interface HomeProps {
+  searchParams: {
+    month: string;
+  };
+}
+
+export default async function Home({ searchParams: { month } }: HomeProps) {
   const { userId } = await auth();
 
   if (!userId) {
     redirect("/login");
+  }
+
+  const monthIsInvalid = !month || !isMatch(month, "MM");
+  if (monthIsInvalid) {
+    redirect("?month=01");
   }
 
   return (
@@ -21,7 +33,7 @@ export default async function Home() {
           <TimeSelect />
         </div>
       </div>
-      <SummaryCard />
+      <SummaryCard month={month} />
     </div>
   );
 }
