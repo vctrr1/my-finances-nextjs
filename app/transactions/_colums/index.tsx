@@ -29,8 +29,8 @@ export const Transactioncolumns: ColumnDef<Transaction>[] = [
         );
       } else if (transaction.type === TransactionType.EXPENSE) {
         return (
-          <Badge className="text-danger bg-danger bg-opacity-10 hover:bg-muted">
-            <CircleIcon className="fill-danger mr-1" size={10} />
+          <Badge className="bg-danger bg-opacity-10 text-danger hover:bg-muted">
+            <CircleIcon className="mr-1 fill-danger" size={10} />
             Despesa
           </Badge>
         );

@@ -45,6 +45,7 @@ interface UpserTransactionDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   defaultValue?: FormSchema;
+  transactionId?: string;
 }
 
 const formSchema = z.object({
@@ -76,6 +77,7 @@ const UpsertTransactionDialog = ({
   isOpen,
   setIsOpen,
   defaultValue,
+  transactionId,
 }: UpserTransactionDialogProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,13 +93,15 @@ const UpsertTransactionDialog = ({
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
-      await addTransaction(data);
+      await addTransaction({ ...data, id: transactionId });
       setIsOpen(false);
       form.reset();
     } catch (error) {
       console.log(error);
     }
   };
+
+  const isUpdate = Boolean(transactionId);
 
   return (
     <Dialog
@@ -112,7 +116,9 @@ const UpsertTransactionDialog = ({
       <DialogTrigger asChild></DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-center">Nova Transação</DialogTitle>
+          <DialogTitle className="text-center">
+            {isUpdate ? "Editar Transação" : "Nova Transação"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -248,7 +254,9 @@ const UpsertTransactionDialog = ({
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button type="submit">Adicionar</Button>
+              <Button type="submit">
+                {isUpdate ? "Atualizar" : "Adicionar"}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
