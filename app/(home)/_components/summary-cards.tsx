@@ -7,48 +7,25 @@ import {
 } from "lucide-react";
 import CardGrid from "./card-grid";
 import AddTransactionButton from "@/app/_components/add-transaction-button";
-import { db } from "@/app/_lib/prisma";
 
 interface SummaryCardsProps {
-  month: string;
+  balance: number;
+  investmentTotal: number;
+  depositsTotal: number;
+  expensesTotal: number;
 }
 
-const SummaryCards = async ({ month }: SummaryCardsProps) => {
-  // objeto que vai ser passado na query do db para perar as transações apenas no mes selecionado
-  const where = {
-    date: {
-      gte: new Date(`2024-${month}-01`),
-      lt: new Date(`2024-${month}-31`),
-    },
-  };
-
-  const depositsTotal = (
-    await db.transaction.aggregate({
-      where: { ...where, type: "DEPOSIT" },
-      _sum: { amount: true },
-    })
-  )?._sum?.amount;
-
-  const investmentTotal = (
-    await db.transaction.aggregate({
-      where: { ...where, type: "INVESTMENT" },
-      _sum: { amount: true },
-    })
-  )?._sum?.amount;
-
-  const expensesTotal = (
-    await db.transaction.aggregate({
-      where: { ...where, type: "EXPENSE" },
-      _sum: { amount: true },
-    })
-  )?._sum?.amount;
-
-  const balance =
-    Number(depositsTotal) - Number(expensesTotal) - Number(investmentTotal);
-
+const SummaryCards = async ({
+  balance,
+  investmentTotal,
+  depositsTotal,
+  expensesTotal,
+}: SummaryCardsProps) => {
   return (
     <div className="space-y-6">
-      <Card className="flex items-center justify-between">
+      <Card
+        className={`flex items-center justify-between bg-white bg-opacity-5`}
+      >
         <div>
           <CardHeader className="flex flex-row items-center space-x-2">
             <WalletIcon size={20} className="mt-1" />
@@ -72,7 +49,7 @@ const SummaryCards = async ({ month }: SummaryCardsProps) => {
         <CardGrid
           icon={<PiggyBankIcon size={23} strokeWidth={1.5} className="mt-1" />}
           title="Investido"
-          amount={Number(investmentTotal)}
+          amount={investmentTotal}
         />
         <CardGrid
           icon={<TrendingUpIcon size={19} className="mt-1 text-green-500" />}
