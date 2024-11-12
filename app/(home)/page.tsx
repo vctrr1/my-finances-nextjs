@@ -7,6 +7,7 @@ import { Button } from "../_components/ui/button";
 import { isMatch } from "date-fns";
 import { TransactionsPieChart } from "./_components/transactions-pie-chart";
 import getDashBoard from "../_data/get-dashboard";
+import ExpensesPerCategory from "./_components/expenses-per-category";
 
 interface HomeProps {
   searchParams: {
@@ -51,6 +52,9 @@ export default async function Home({ searchParams: { month } }: HomeProps) {
               depositsTotal={Number(dashboard.depositsTotal)}
               investmentTotal={Number(dashboard.investmentsTotal)}
               typesPercentage={dashboard.typesPercentage}
+            />
+            <ExpensesPerCategory
+              expensesPerCategory={dashboard.totalExpensePerCategory}
             />
           </div>
         </div>
