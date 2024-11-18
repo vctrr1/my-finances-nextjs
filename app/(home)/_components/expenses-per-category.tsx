@@ -12,7 +12,7 @@ const ExpensesPerCategory = ({
   expensesPerCategory,
 }: ExpensesPerCategoryProps) => {
   return (
-    <ScrollArea className="col-span-2 h-full rounded-md border pb-2">
+    <ScrollArea className="col-span-2 max-h-[364px] rounded-md border pb-2">
       <CardHeader>
         <CardTitle className="text-xl">Gastos por Categoria</CardTitle>
       </CardHeader>
